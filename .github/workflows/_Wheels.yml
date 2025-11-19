@@ -3,9 +3,9 @@ name: _Create and upload wheels
 on:
   workflow_dispatch:
   workflow_call:
-    secrets:
-      TESTPYPI_PASSWORD:
-        required: true
+#    secrets:
+#      TESTPYPI_PASSWORD:
+#        required: true
 
 env:
   PROJECT: PyMca5
