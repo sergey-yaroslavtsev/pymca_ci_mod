@@ -92,4 +92,4 @@ jobs:
     if: ${{ inputs.skipper == 'local' }}
     steps:
       - name: Pass
-        run: pass
+        run: echo "Skipping version check because of local run"
