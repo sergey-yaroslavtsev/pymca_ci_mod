@@ -61,19 +61,13 @@ jobs:
             echo "should_release=false" >> $GITHUB_OUTPUT
           fi
 
+
   version-check:
     needs: version-change
     if: needs.version-change.outputs.should_release == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Local runner (skip version check)
-        if: github.event.inputs.force == 'local'
-        run: echo "Skipping version checker"
-
-      - name: Real version check
-        if: github.event.inputs.force != 'local'
-        uses: ./.github/workflows/_Version.yml
+    uses: ./.github/workflows/_Version.yml
+    with:
+      skipper: ${{ github.event.inputs.force }}
 
   run-build-upload:
     needs: version-check
