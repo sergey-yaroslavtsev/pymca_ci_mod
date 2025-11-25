@@ -86,3 +86,10 @@ jobs:
               exit(1)
           else:
               print(f"✅ Version {version} is new and OK to publish")
+
+  skipper:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.skipper == 'local' }}
+    steps:
+      - name: Pass
+        run: pass
