@@ -31,7 +31,7 @@ jobs:
       - name: Download the macOS universal2 artifact
         uses: actions/download-artifact@v4
         with:
-          name: macos-universal2-dmg
+          name: macos-universal2-app
           path: dist
 
       - name: Download Windows artifact
