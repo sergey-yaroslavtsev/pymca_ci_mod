@@ -350,7 +350,7 @@ jobs:
           find dist -type f \( -name '*.whl' -o -name '*.tar.gz' \)
 
       - name: Upload wheels to TestPyPI
-        if: secrets.TESTPYPI_PASSWORD != ''
+        if: ${{ inputs.TESTPYPI_PASSWORD != '' }}
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.TESTPYPI_PASSWORD }}
