@@ -3,9 +3,9 @@ name: _Upload to PyPI
 
 on:
   workflow_call:
-#    secrets:
-#      PYPI_PASSWORD:
-#        required: true
+    secrets:
+      PYPI_PASSWORD:
+        required: true
 
 jobs:
   upload_to_pypi:
@@ -40,9 +40,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade twine
 
-#      - name: Upload to PyPI
-#        env:
-#          TWINE_USERNAME: __token__
-#          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-#        run: |
-#          python -m twine upload --verbose dist/*
+      - name: Upload to PyPI
+        if: secrets.PYPI_PASSWORD != ''
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          python -m twine upload --verbose dist/*
