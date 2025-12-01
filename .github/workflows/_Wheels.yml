@@ -309,7 +309,7 @@ jobs:
           cd ..
           arch -x86_64 python -m PyMca5.tests.TestAll
 
-  upload_to_testpypi:
+  check_existence_of_artifacts:
     name: Upload all wheels to TestPyPI
     runs-on: macos-latest
     needs:
@@ -339,23 +339,3 @@ jobs:
 
       - name: List all downloaded files
         run: ls -R dist
-
-      - name: Upgrade
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade twine
-
-      - name: List files to be uploaded
-        run: |
-          find dist -type f \( -name '*.whl' -o -name '*.tar.gz' \)
-
-      - name: Upload wheels to TestPyPI
-        if: ${{ inputs.TESTPYPI_PASSWORD != '' }}
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TESTPYPI_PASSWORD }}
-        run: |
-          files=$(find dist -type f \( -name '*.whl' -o -name '*.tar.gz' \))
-          echo "Uploading files:"
-          echo "$files"
-          python -m twine upload --verbose --repository testpypi $files

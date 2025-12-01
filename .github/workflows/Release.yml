@@ -114,7 +114,9 @@ jobs:
     uses: ./.github/workflows/_UploadRelease.yml
 
   upload-pypi:
-    needs: tag-release
+    needs:
+      - changelog
+      - upload-release
     uses: ./.github/workflows/_PyPI.yml
     secrets:
       PYPI_PASSWORD: ${{ github.event.inputs.mode != 'dry-run' && secrets.PYPI_PASSWORD || '' }}
