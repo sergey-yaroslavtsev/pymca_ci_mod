@@ -68,8 +68,6 @@ jobs:
   run-build-upload:
     needs: version-check
     uses: ./.github/workflows/_Wheels.yml
-    secrets:
-      TESTPYPI_PASSWORD: ${{ github.event.inputs.mode != 'dry-run' && secrets.TESTPYPI_PASSWORD || '' }}
 
   trigger-windows-pyinstaller:
     needs: run-build-upload

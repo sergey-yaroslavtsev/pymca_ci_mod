@@ -1,12 +1,6 @@
 name: _Update Changelog on Tag
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to update changelog for (e.g., v1.2.3)'
-        required: true
-        type: string
   workflow_call:
 
 permissions:
