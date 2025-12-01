@@ -36,11 +36,11 @@ Main Steps
 Start
 #####
 
-Start the release procedure by pushing a commit to the `master` branch with modified version in `src/PyMca5/__init__.py`. The release pipeline is not triggered by PRs. If the release pipeline fails during the `wheels` step before the upload to TestPyPI, changes can be committed and the release pipeline can be triggered manually. The release includes uploading wheels to TestPyPI and PyPI, as well as creating executable files (installer for Windows and universal DMG for macOS).
+Start the release procedure by pushing a commit to the `master` branch with modified version in `src/PyMca5/__init__.py`. The release pipeline is not triggered by PRs. If the release pipeline fails during the `wheels` step before creating tag (and so before upload to PyPI), changes can be committed and the release pipeline can be triggered manually suing the 'force' option. The release includes uploading wheels to PyPI, as well as creating executable files (installer for Windows and universal DMG for macOS).
 
 The entire release pipeline can take about an hour.
 
-If you need to make complicated modifications to the CI workflow, please create a fork and run all your CI in the fork.
+If you need to make complicated modifications to the CI workflow, please create a fork and run all your CI in the fork. Release procedure can be tested in the fork using 'dry-run' option which do not require any secrets - the DMG will not be signed, tag will not be created, no upload to PyPI will happen.
 
 Test
 ####
