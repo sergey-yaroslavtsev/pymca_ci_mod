@@ -1,10 +1,10 @@
 Contributing
 ============
 
-Developers installation
+Developer Installation
 -----------------------
 
-Editable install with all requirements
+Perform an editable install with all requirements
 
 .. code:: bash
 
@@ -23,31 +23,33 @@ or using the module directly
     python -m PyMca5.PyMcaGui.pymca.PyMcaMain
 
 Release
-----------
-Main steps
-#######
+-------
+
+Main Steps
+##########
 
 1) Update version in ``src/PyMca5/__init__.py``
 2) Wait until release action is finished
-3) Download and `test` Windwos and MacOS frozen binaries
+3) Download and `test` Windows and macOS frozen binaries
 4) Update ``changelog.txt``
 
 Start
-#######
+#####
 
-tart the release procedure by push a commit to the `master` branch with modified version in `src/PyMca5/__init__.py`. If the release pipeline fails during the `wheels` step before uploading to test-PyPI, changes can be commited and the release pipeline can be started manually.
-The release includes upload wheels to test-PyPI and PyPI as well as creating executable files (installer for Windows and universal dmg for MacOS).
+Start the release procedure by pushing a commit to the `master` branch with modified version in `src/PyMca5/__init__.py`. The release pipeline is not triggered by PRs. If the release pipeline fails during the `wheels` step before creating tag (and so before upload to PyPI), changes can be committed and the release pipeline can be triggered manually suing the 'force' option. The release includes uploading wheels to PyPI, as well as creating executable files (installer for Windows and universal DMG for macOS).
 
 The entire release pipeline can take about an hour.
 
-Test
-#######
+If you need to make complicated modifications to the CI workflow, please create a fork and run all your CI in the fork. Release procedure can be tested in the fork using 'dry-run' option which do not require any secrets - the DMG will not be signed, tag will not be created, no upload to PyPI will happen.
 
-The CI run tests on wheels and only check that bundled versions do not crash on launch to avoid any incompatibility. That is why frozen (fat) binaries should be tested manually using the following procedure:
+Test
+####
+
+The CI runs tests on wheels and tries to run tests in the GUI. To be sure that there are no bugs, the tests should be run directly in frozen binaries manually using the following procedure:
 
 `call/load 1D plugins` → `interactive console`
 
-.. image:: NavigationImages/InteractiveConsole.png
+.. image:: package/NavigationImages/InteractiveConsole.png
    :alt: interactive_console
 
 .. code:: bash
@@ -57,7 +59,7 @@ The CI run tests on wheels and only check that bundled versions do not crash on 
 
 Few tests will be skipped, and none should fail.
 
-Please notice that tests `should` be performed on Windows, MacOS-arm64 and MacOS-x86.
+Please note that tests should be performed on Windows, macOS-arm64 and macOS-x86.
 
 Changelog
 #########
@@ -66,8 +68,9 @@ A list of pull requests will be generated in the release comments but not in ``c
 
 Availability
 ############
-New versions of PyMca5 will be distributed via github releases.
 
-Older version (<5.9.5) are available at https://sourceforge.net/projects/pymca/files/pymca/PyMca5.9.4/
+New versions of PyMca5 will be distributed via GitHub releases at https://github.com/silx-kit/pymca/releases.
+
+Older versions (pre 5.9.5) are available at https://sourceforge.net/projects/pymca/files/pymca.
 
 

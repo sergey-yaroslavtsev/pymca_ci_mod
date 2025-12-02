@@ -4,20 +4,24 @@ permissions:
   contents: write
 
 on:
-#  release:
-#    types: [published]
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
-      force:
-        description: 'Force release even if version was not changed'
-        required: false
-        default: 'false'
-        # change to 'true' for manual release
+      mode:
+        description: "Release mode"
+        type: choice
+        options:
+          - do nothing # safe precaution from accident trigger
+          - force # ignore check of version change in last commit
+          - dry-run # for testing - no tag, no upload neither to TestPyPI nor to PyPI
+        default: "do nothing"
+
   push:
     branches:
       - master
     paths:
-      - 'src/PyMca5/__init__.py'
+      - "src/PyMca5/__init__.py"
 
 jobs:
   version-change:
@@ -43,8 +47,11 @@ jobs:
           if [[ -n "$changed" ]]; then
             echo "Version changed"
             echo "should_release=true" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.force }}" == "true" ]]; then
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.mode }}" == "force" ]]; then
             echo "Release was triggered manually"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.mode }}" == "dry-run" ]]; then
+            echo "Dry-run started"
             echo "should_release=true" >> $GITHUB_OUTPUT
           else
             echo "No release... for now"
@@ -55,12 +62,12 @@ jobs:
     needs: version-change
     if: needs.version-change.outputs.should_release == 'true'
     uses: ./.github/workflows/_Version.yml
+    with:
+      skipper: ${{ github.event.inputs.mode }}
 
   run-build-upload:
     needs: version-check
     uses: ./.github/workflows/_Wheels.yml
-    secrets:
-      TESTPYPI_PASSWORD: ${{ secrets.TESTPYPI_PASSWORD }}
 
   trigger-windows-pyinstaller:
     needs: run-build-upload
@@ -73,8 +80,16 @@ jobs:
   trigger-mac:
     needs: run-build-upload
     uses: ./.github/workflows/_MacOS.yml
+    secrets:
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
+      APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64 }}
+      APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+      APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }}
 
   tag-release:
+    if: github.event.inputs.mode != 'dry-run'
     permissions:
       contents: write
     needs:
@@ -83,22 +98,23 @@ jobs:
     uses: ./.github/workflows/_TagRelease.yml
 
   changelog:
+    if: github.event.inputs.mode != 'dry-run'
     permissions:
       contents: write
     needs: tag-release
     uses: ./.github/workflows/_ChangeLog.yml
 
   upload-release:
+    if: github.event.inputs.mode != 'dry-run'
     permissions:
       contents: write
     needs: tag-release
     uses: ./.github/workflows/_UploadRelease.yml
 
   upload-pypi:
-    needs: tag-release
+    needs:
+      - changelog
+      - upload-release
     uses: ./.github/workflows/_PyPI.yml
     secrets:
-      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-
-
-
+      PYPI_PASSWORD: ${{ github.event.inputs.mode != 'dry-run' && secrets.PYPI_PASSWORD || '' }}
