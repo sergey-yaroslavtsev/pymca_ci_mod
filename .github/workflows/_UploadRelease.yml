@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download Linux artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: Linux-sdist
           path: dist
@@ -29,13 +29,13 @@ jobs:
           echo "Renamed $old_file → $new_file"
 
       - name: Download the macOS universal2 artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: macos-universal2-dmg
           path: dist
 
       - name: Download Windows artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: windows-installer-cxfreeze
           path: dist

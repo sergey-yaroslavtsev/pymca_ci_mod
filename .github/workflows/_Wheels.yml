@@ -70,7 +70,7 @@ jobs:
         run: ls dist
 
       - name: Upload wheel as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.os }}-wheels
           path: dist/*.whl
@@ -78,7 +78,7 @@ jobs:
 
       - name: Upload wheel as artifact
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Linux-sdist
           path: dist/*.tar.gz
@@ -155,7 +155,7 @@ jobs:
           #PyQt5==5.14.1
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: Linux-sdist
           path: dist
@@ -241,7 +241,7 @@ jobs:
           #PyQt5
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: ${{ matrix.os }}-wheels
           path: dist
@@ -322,14 +322,14 @@ jobs:
           python-version: "3.13"
 
       - name: Download All Artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: dist
           pattern: '*-wheels'
           merge-multiple: true
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: Linux-sdist
           path: dist
