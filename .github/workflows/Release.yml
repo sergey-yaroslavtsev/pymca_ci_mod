@@ -117,4 +117,4 @@ jobs:
       - upload-release
     uses: ./.github/workflows/_PyPI.yml
     secrets:
-      PYPI_PASSWORD: ${{ github.event.inputs.mode != 'dry-run' && secrets.PYPI_PASSWORD || '' }}
+      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
