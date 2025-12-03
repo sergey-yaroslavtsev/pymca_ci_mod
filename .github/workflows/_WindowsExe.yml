@@ -13,9 +13,9 @@ jobs:
   windows_pyinstaller_python39: #also works with cp311 and pyside6 as well as oldest cp39 pyqt5
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13" #was working with 3.11 and Pyside6
 
