@@ -32,6 +32,8 @@ import os
 import sys, getopt
 import traceback
 import logging
+import multiprocessing
+
 if sys.platform == 'win32':
     import ctypes
     from ctypes.wintypes import MAX_PATH
@@ -177,6 +179,14 @@ from PyMca5 import PyMcaDataDir
 __version__ = PyMca5.version()
 
 if __name__ == "__main__":
+
+    multiprocessing.freeze_support()
+
+    # On macOS, set the executable for child processes to prevent -B flag issues
+    if getattr(sys, 'frozen', False):
+        print("Running PyMca in a frozen environment, setting multiprocessing executable")
+        multiprocessing.set_executable(sys.executable)
+
     sys.excepthook = qt.exceptionHandler
 
     app = qt.QApplication(sys.argv)
