@@ -328,11 +328,11 @@ jobs:
           pattern: '*-wheels'
           merge-multiple: true
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v6
-        with:
-          name: Linux-sdist
-          path: dist
+      # - name: Download all artifacts
+      #   uses: actions/download-artifact@v6
+      #   with:
+      #     name: Linux-sdist
+      #     path: dist
 
       - name: List all downloaded files
         run: ls -R dist
