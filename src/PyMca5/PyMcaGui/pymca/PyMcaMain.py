@@ -182,6 +182,15 @@ if __name__ == "__main__":
     multiprocessing.freeze_support()
     if getattr(sys, 'frozen', False):
         multiprocessing.set_executable(sys.executable)
+        if sys.platform == 'darwin':
+            try:
+                multiprocessing.set_start_method('spawn', force=True)
+                _logger.info("Set multiprocessing start method to 'spawn' for frozen macOS build")
+            except RuntimeError:
+                # Already set, which is fine
+                pass
+            # Set environment variable to help multiprocessing find the executable
+            os.environ['PYTHONEXECUTABLE'] = sys.executable
 
     sys.excepthook = qt.exceptionHandler
 
