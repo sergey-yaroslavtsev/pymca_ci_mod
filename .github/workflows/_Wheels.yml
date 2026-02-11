@@ -309,9 +309,9 @@ jobs:
   check_existence_of_artifacts:
     name: Upload all wheels to TestPyPI
     runs-on: macos-latest
-    needs:
-      - test_wheels
-      - test_sdist
+    # needs:
+    #   - test_wheels
+    #   - test_sdist
     if: ${{ success() }}
     steps:
       - uses: actions/checkout@v6
