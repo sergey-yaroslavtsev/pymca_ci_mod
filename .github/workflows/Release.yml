@@ -69,13 +69,13 @@ jobs:
     needs: version-check
     uses: ./.github/workflows/_Wheels.yml
 
-  # trigger-windows-pyinstaller:
-  #   needs: run-build-upload
-  #   uses: ./.github/workflows/_WindowsExe.yml
+  trigger-windows-pyinstaller:
+    needs: run-build-upload
+    uses: ./.github/workflows/_WindowsExe.yml
 
-  # trigger-windows-cx:
-  #   needs: run-build-upload
-  #   uses: ./.github/workflows/_WindowsInstaller.yml
+  trigger-windows-cx:
+    needs: run-build-upload
+    uses: ./.github/workflows/_WindowsInstaller.yml
 
   trigger-mac:
     needs: run-build-upload
@@ -88,33 +88,33 @@ jobs:
       APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
       APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }}
 
-  # tag-release:
-  #   if: github.event.inputs.mode != 'dry-run'
-  #   permissions:
-  #     contents: write
-  #   needs:
-  #     - trigger-windows-cx
-  #     - trigger-mac
-  #   uses: ./.github/workflows/_TagRelease.yml
+  tag-release:
+    if: github.event.inputs.mode != 'dry-run'
+    permissions:
+      contents: write
+    needs:
+      - trigger-windows-cx
+      - trigger-mac
+    uses: ./.github/workflows/_TagRelease.yml
 
-  # changelog:
-  #   if: github.event.inputs.mode != 'dry-run'
-  #   permissions:
-  #     contents: write
-  #   needs: tag-release
-  #   uses: ./.github/workflows/_ChangeLog.yml
+  changelog:
+    if: github.event.inputs.mode != 'dry-run'
+    permissions:
+      contents: write
+    needs: tag-release
+    uses: ./.github/workflows/_ChangeLog.yml
 
-  # upload-release:
-  #   if: github.event.inputs.mode != 'dry-run'
-  #   permissions:
-  #     contents: write
-  #   needs: tag-release
-  #   uses: ./.github/workflows/_UploadRelease.yml
+  upload-release:
+    if: github.event.inputs.mode != 'dry-run'
+    permissions:
+      contents: write
+    needs: tag-release
+    uses: ./.github/workflows/_UploadRelease.yml
 
-  # upload-pypi:
-  #   needs:
-  #     - changelog
-  #     - upload-release
-  #   uses: ./.github/workflows/_PyPI.yml
-  #   secrets:
-  #     PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+  upload-pypi:
+    needs:
+      - changelog
+      - upload-release
+    uses: ./.github/workflows/_PyPI.yml
+    secrets:
+      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}

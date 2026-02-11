@@ -180,17 +180,14 @@ __version__ = PyMca5.version()
 if __name__ == "__main__":
 
     multiprocessing.freeze_support()
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, 'frozen', False) and sys.platform == 'darwin':
         multiprocessing.set_executable(sys.executable)
-        if sys.platform == 'darwin':
-            try:
-                multiprocessing.set_start_method('fork', force=True)
-                _logger.info("Set multiprocessing start method to 'fork' for frozen macOS build")
-            except RuntimeError:
-                # Already set, which is fine
-                pass
-            # Set environment variable to help multiprocessing find the executable
-            os.environ['PYTHONEXECUTABLE'] = sys.executable
+        try:
+            multiprocessing.set_start_method('fork', force=True)
+            _logger.info("Set multiprocessing start method to 'fork' for frozen macOS build")
+        except RuntimeError:
+            pass
+        os.environ['PYTHONEXECUTABLE'] = sys.executable
 
     sys.excepthook = qt.exceptionHandler
 
