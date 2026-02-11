@@ -53,6 +53,8 @@ hiddenimports += collect_submodules('PyMca5.PyMcaGui.pymca')
 my_binaries = []
 
 hiddenimports += collect_submodules('PySide6.QtTest')
+hiddenimports += collect_submodules('multiprocessing')
+hiddenimports += collect_submodules('multiprocessing.spawn')
 
 if sys.platform.startswith("win"):
     hiddenimports += collect_submodules('numpy')

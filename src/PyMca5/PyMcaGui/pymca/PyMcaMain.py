@@ -32,6 +32,7 @@ import os
 import sys, getopt
 import traceback
 import logging
+import multiprocessing
 if sys.platform == 'win32':
     import ctypes
     from ctypes.wintypes import MAX_PATH
@@ -177,6 +178,10 @@ from PyMca5 import PyMcaDataDir
 __version__ = PyMca5.version()
 
 if __name__ == "__main__":
+
+    multiprocessing.freeze_support()
+    if getattr(sys, 'frozen', False):
+        multiprocessing.set_executable(sys.executable)
 
     sys.excepthook = qt.exceptionHandler
 
