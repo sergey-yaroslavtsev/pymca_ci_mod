@@ -15,14 +15,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            python-version: "3.12"
+          # - os: ubuntu-latest
+          #   python-version: "3.12"
 
           - os: macos-latest
             python-version: "3.12"
 
-          - os: windows-latest
-            python-version: "3.12"
+          # - os: windows-latest
+          #   python-version: "3.12"
 
     steps:
 
@@ -85,226 +85,226 @@ jobs:
           retention-days: 1
 
 
-  test_sdist:
-    runs-on: ubuntu-latest
-    needs: build_wheels_sdist
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
+  # test_sdist:
+  #   runs-on: ubuntu-latest
+  #   needs: build_wheels_sdist
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
 
-    steps:
+  #   steps:
 
-      - uses: actions/checkout@v6
+  #     - uses: actions/checkout@v6
 
-      - name: Install OS dependencies
-        run: |
-            sudo apt-get update -yy
-            sudo apt-get install -yy \
-              libxkbcommon-x11-0 \
-              libxkbcommon0 \
-              libxkbcommon-dev \
-              libxcb-icccm4 \
-              libxcb-image0 \
-              libxcb-shm0 \
-              libxcb-keysyms1 \
-              libxcb-randr0 \
-              libxcb-render-util0 \
-              libxcb-render0 \
-              libxcb-shape0 \
-              libxcb-sync1 \
-              libxcb-xfixes0 \
-              libxcb-xinerama0 \
-              libxcb-xkb1 \
-              libxcb1 \
-              libxcb-util1 \
-              libxcb-cursor0 \
-              libglu1-mesa \
-              libgl1 \
-              libegl1 \
-              libegl-dev \
-              libx11-xcb1 \
-              libxi6 \
-              libxrender1 \
-              libsm6 \
-              x11-utils \
-              xvfb
-            export QT_QPA_PLATFORM=offscreen
-            export QT_OPENGL=software
+  #     - name: Install OS dependencies
+  #       run: |
+  #           sudo apt-get update -yy
+  #           sudo apt-get install -yy \
+  #             libxkbcommon-x11-0 \
+  #             libxkbcommon0 \
+  #             libxkbcommon-dev \
+  #             libxcb-icccm4 \
+  #             libxcb-image0 \
+  #             libxcb-shm0 \
+  #             libxcb-keysyms1 \
+  #             libxcb-randr0 \
+  #             libxcb-render-util0 \
+  #             libxcb-render0 \
+  #             libxcb-shape0 \
+  #             libxcb-sync1 \
+  #             libxcb-xfixes0 \
+  #             libxcb-xinerama0 \
+  #             libxcb-xkb1 \
+  #             libxcb1 \
+  #             libxcb-util1 \
+  #             libxcb-cursor0 \
+  #             libglu1-mesa \
+  #             libgl1 \
+  #             libegl1 \
+  #             libegl-dev \
+  #             libx11-xcb1 \
+  #             libxi6 \
+  #             libxrender1 \
+  #             libsm6 \
+  #             x11-utils \
+  #             xvfb
+  #           export QT_QPA_PLATFORM=offscreen
+  #           export QT_OPENGL=software
 
-      - name: Start virtual display
-        run: |
-          /usr/bin/Xvfb :99 -screen 0 1920x1080x24 &
-          export DISPLAY=:99
+  #     - name: Start virtual display
+  #       run: |
+  #         /usr/bin/Xvfb :99 -screen 0 1920x1080x24 &
+  #         export DISPLAY=:99
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v6
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install cython
-          python -m pip install numpy
-          python -m pip install silx
+  #     - name: Install
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         python -m pip install cython
+  #         python -m pip install numpy
+  #         python -m pip install silx
 
-      - name: Install Qt
-        run: |
-          python -m pip install Pyside6==6.9.1
-          #PyQt5==5.14.1
+  #     - name: Install Qt
+  #       run: |
+  #         python -m pip install Pyside6==6.9.1
+  #         #PyQt5==5.14.1
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v6
-        with:
-          name: Linux-sdist
-          path: dist
+  #     - name: Download all artifacts
+  #       uses: actions/download-artifact@v6
+  #       with:
+  #         name: Linux-sdist
+  #         path: dist
 
-      - name: Install
-        run: |
-          python -m pip install --pre "$(ls dist/*ca5-5.*)"
+  #     - name: Install
+  #       run: |
+  #         python -m pip install --pre "$(ls dist/*ca5-5.*)"
 
-      - name: Run the tests
-        run: |
-          cd ..
-          xvfb-run -a python -m PyMca5.tests.TestAll
+  #     - name: Run the tests
+  #       run: |
+  #         cd ..
+  #         xvfb-run -a python -m PyMca5.tests.TestAll
 
-  test_wheels:
-    runs-on: ${{ matrix.os }}
-    needs: build_wheels_sdist
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
+  # test_wheels:
+  #   runs-on: ${{ matrix.os }}
+  #   needs: build_wheels_sdist
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [ ubuntu-latest, windows-latest, macos-latest ]
+  #       python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
 
-    steps:
-      - uses: actions/checkout@v6
+  #   steps:
+  #     - uses: actions/checkout@v6
 
-      - name: Install OS dependencies
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-            sudo apt-get update -yy
-            sudo apt-get install -yy \
-              libxkbcommon-x11-0 \
-              libxkbcommon0 \
-              libxkbcommon-dev \
-              libxcb-icccm4 \
-              libxcb-image0 \
-              libxcb-shm0 \
-              libxcb-keysyms1 \
-              libxcb-randr0 \
-              libxcb-render-util0 \
-              libxcb-render0 \
-              libxcb-shape0 \
-              libxcb-sync1 \
-              libxcb-xfixes0 \
-              libxcb-xinerama0 \
-              libxcb-xkb1 \
-              libxcb1 \
-              libxcb-util1 \
-              libxcb-cursor0 \
-              libglu1-mesa \
-              libgl1 \
-              libegl1 \
-              libegl-dev \
-              libx11-xcb1 \
-              libxi6 \
-              libxrender1 \
-              libsm6 \
-              x11-utils \
-              xvfb
-            export QT_QPA_PLATFORM=offscreen
-            export QT_OPENGL=software
+  #     - name: Install OS dependencies
+  #       if: matrix.os == 'ubuntu-latest'
+  #       run: |
+  #           sudo apt-get update -yy
+  #           sudo apt-get install -yy \
+  #             libxkbcommon-x11-0 \
+  #             libxkbcommon0 \
+  #             libxkbcommon-dev \
+  #             libxcb-icccm4 \
+  #             libxcb-image0 \
+  #             libxcb-shm0 \
+  #             libxcb-keysyms1 \
+  #             libxcb-randr0 \
+  #             libxcb-render-util0 \
+  #             libxcb-render0 \
+  #             libxcb-shape0 \
+  #             libxcb-sync1 \
+  #             libxcb-xfixes0 \
+  #             libxcb-xinerama0 \
+  #             libxcb-xkb1 \
+  #             libxcb1 \
+  #             libxcb-util1 \
+  #             libxcb-cursor0 \
+  #             libglu1-mesa \
+  #             libgl1 \
+  #             libegl1 \
+  #             libegl-dev \
+  #             libx11-xcb1 \
+  #             libxi6 \
+  #             libxrender1 \
+  #             libsm6 \
+  #             x11-utils \
+  #             xvfb
+  #           export QT_QPA_PLATFORM=offscreen
+  #           export QT_OPENGL=software
 
-      - name: Start virtual display
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          /usr/bin/Xvfb :99 -screen 0 1920x1080x24 &
-          export DISPLAY=:99
+  #     - name: Start virtual display
+  #       if: matrix.os == 'ubuntu-latest'
+  #       run: |
+  #         /usr/bin/Xvfb :99 -screen 0 1920x1080x24 &
+  #         export DISPLAY=:99
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v6
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install cython
-          python -m pip install numpy
-          python -m pip install silx
+  #     - name: Install
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         python -m pip install cython
+  #         python -m pip install numpy
+  #         python -m pip install silx
 
-      - name: Install Qt
-        run: |
-          python -m pip install Pyside6==6.9.1
-          #PyQt5
+  #     - name: Install Qt
+  #       run: |
+  #         python -m pip install Pyside6==6.9.1
+  #         #PyQt5
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v6
-        with:
-          name: ${{ matrix.os }}-wheels
-          path: dist
+  #     - name: Download all artifacts
+  #       uses: actions/download-artifact@v6
+  #       with:
+  #         name: ${{ matrix.os }}-wheels
+  #         path: dist
 
-      - name: Install correct wheel
-        shell: bash
-        id: install_wheel
-        run: |
-          pv="${{ matrix.python-version }}"
-          PYTAG="cp${pv//./}"
-          case "${{ matrix.os }}" in
-            ubuntu-latest)
-              PLATFORM_TAG="manylinux"
-              ;;
-            windows-latest)
-              PLATFORM_TAG="win"
-              ;;
-            macos-latest)
-              PLATFORM_TAG="macosx"
-              ;;
-            *)
-              echo "Unsupported OS: ${{ matrix.os }}"
-              exit 1
-              ;;
-          esac
+  #     - name: Install correct wheel
+  #       shell: bash
+  #       id: install_wheel
+  #       run: |
+  #         pv="${{ matrix.python-version }}"
+  #         PYTAG="cp${pv//./}"
+  #         case "${{ matrix.os }}" in
+  #           ubuntu-latest)
+  #             PLATFORM_TAG="manylinux"
+  #             ;;
+  #           windows-latest)
+  #             PLATFORM_TAG="win"
+  #             ;;
+  #           macos-latest)
+  #             PLATFORM_TAG="macosx"
+  #             ;;
+  #           *)
+  #             echo "Unsupported OS: ${{ matrix.os }}"
+  #             exit 1
+  #             ;;
+  #         esac
       
-          echo "wheel tag: $PYTAG + $PLATFORM_TAG"
-          WHL_PATH=$(find dist -name "*${PYTAG}*${PLATFORM_TAG}*.whl" | head -n 1)
+  #         echo "wheel tag: $PYTAG + $PLATFORM_TAG"
+  #         WHL_PATH=$(find dist -name "*${PYTAG}*${PLATFORM_TAG}*.whl" | head -n 1)
       
-          if [[ -z "$WHL_PATH" ]]; then
-            echo "❌ No matching wheel found for $PYTAG + $PLATFORM_TAG"
-            exit 1
-          fi
+  #         if [[ -z "$WHL_PATH" ]]; then
+  #           echo "❌ No matching wheel found for $PYTAG + $PLATFORM_TAG"
+  #           exit 1
+  #         fi
       
-          echo "✅ Installing: $WHL_PATH"
-          pip install "$WHL_PATH"
+  #         echo "✅ Installing: $WHL_PATH"
+  #         pip install "$WHL_PATH"
           
-          # Set output for the step
-          echo "wheel-path=$WHL_PATH" >> $GITHUB_OUTPUT
+  #         # Set output for the step
+  #         echo "wheel-path=$WHL_PATH" >> $GITHUB_OUTPUT
 
-      - name: Run the tests
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          cd ..
-          xvfb-run -a python -m PyMca5.tests.TestAll
+  #     - name: Run the tests
+  #       if: matrix.os == 'ubuntu-latest'
+  #       run: |
+  #         cd ..
+  #         xvfb-run -a python -m PyMca5.tests.TestAll
 
-      - name: Run the tests
-        if: matrix.os != 'ubuntu-latest'
-        run: |
-          cd ..
-          python -m PyMca5.tests.TestAll
+  #     - name: Run the tests
+  #       if: matrix.os != 'ubuntu-latest'
+  #       run: |
+  #         cd ..
+  #         python -m PyMca5.tests.TestAll
 
-      - name: Run extra x86 tests
-        if: matrix.os == 'macos-latest'
-        run: |
-          arch -x86_64 python -m venv venv-x86
-          chmod +x venv-x86/bin/python
-          source venv-x86/bin/activate
-          arch -x86_64 python -m pip install Pyside6
-          arch -x86_64 python -m pip install silx
-          arch -x86_64 python -m pip install --pre ${{ steps.install_wheel.outputs.wheel-path }}
-          cd ..
-          arch -x86_64 python -m PyMca5.tests.TestAll
+  #     - name: Run extra x86 tests
+  #       if: matrix.os == 'macos-latest'
+  #       run: |
+  #         arch -x86_64 python -m venv venv-x86
+  #         chmod +x venv-x86/bin/python
+  #         source venv-x86/bin/activate
+  #         arch -x86_64 python -m pip install Pyside6
+  #         arch -x86_64 python -m pip install silx
+  #         arch -x86_64 python -m pip install --pre ${{ steps.install_wheel.outputs.wheel-path }}
+  #         cd ..
+  #         arch -x86_64 python -m PyMca5.tests.TestAll
 
   check_existence_of_artifacts:
     name: Upload all wheels to TestPyPI

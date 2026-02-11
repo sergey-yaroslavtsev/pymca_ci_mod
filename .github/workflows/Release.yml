@@ -69,13 +69,13 @@ jobs:
     needs: version-check
     uses: ./.github/workflows/_Wheels.yml
 
-  trigger-windows-pyinstaller:
-    needs: run-build-upload
-    uses: ./.github/workflows/_WindowsExe.yml
+  # trigger-windows-pyinstaller:
+  #   needs: run-build-upload
+  #   uses: ./.github/workflows/_WindowsExe.yml
 
-  trigger-windows-cx:
-    needs: run-build-upload
-    uses: ./.github/workflows/_WindowsInstaller.yml
+  # trigger-windows-cx:
+  #   needs: run-build-upload
+  #   uses: ./.github/workflows/_WindowsInstaller.yml
 
   trigger-mac:
     needs: run-build-upload
