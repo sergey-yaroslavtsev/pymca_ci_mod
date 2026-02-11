@@ -184,8 +184,8 @@ if __name__ == "__main__":
         multiprocessing.set_executable(sys.executable)
         if sys.platform == 'darwin':
             try:
-                multiprocessing.set_start_method('spawn', force=True)
-                _logger.info("Set multiprocessing start method to 'spawn' for frozen macOS build")
+                multiprocessing.set_start_method('fork', force=True)
+                _logger.info("Set multiprocessing start method to 'fork' for frozen macOS build")
             except RuntimeError:
                 # Already set, which is fine
                 pass

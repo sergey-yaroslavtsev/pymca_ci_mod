@@ -33,11 +33,11 @@ def safe_hdf5_group_keys(file_path, data_path=None):
 def run_in_subprocess(target, *args, context=None, default=None, **kwargs):
     if getattr(sys, 'frozen', False) and sys.platform == 'darwin' and context is None:
         try:
-            _logger.info("Using 'spawn' context for frozen macOS build")
-            ctx = multiprocessing.get_context('spawn')
+            _logger.info("Using 'fork' context for frozen macOS build")
+            ctx = multiprocessing.get_context('fork')
         except ValueError:
-            # If 'spawn' is not available for some reason, fall back to default
-            _logger.warning("Failed to get 'spawn' context, using default")
+            # If 'fork' is not available for some reason, fall back to default
+            _logger.warning("Failed to get 'fork' context, using default")
             # This will likely fail
             ctx = multiprocessing.get_context(context)
     else:
