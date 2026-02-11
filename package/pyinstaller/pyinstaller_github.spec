@@ -54,7 +54,8 @@ my_binaries = []
 
 hiddenimports += collect_submodules('PySide6.QtTest')
 hiddenimports += collect_submodules('multiprocessing')
-hiddenimports += collect_submodules('multiprocessing.fork')
+hiddenimports += collect_submodules('multiprocessing.spawn')
+# hiddenimports += collect_submodules('multiprocessing.fork')
 
 if sys.platform.startswith("win"):
     hiddenimports += collect_submodules('numpy')

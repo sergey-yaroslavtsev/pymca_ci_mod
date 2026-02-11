@@ -41,6 +41,8 @@ nativeFileDialogs = None
 _logger = logging.getLogger(__name__)
 backend=None
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
+
     options     = '-f'
     longoptions = ['spec=',
                    'shm=',
@@ -178,17 +180,6 @@ from PyMca5 import PyMcaDataDir
 __version__ = PyMca5.version()
 
 if __name__ == "__main__":
-
-    multiprocessing.freeze_support()
-    if getattr(sys, 'frozen', False) and sys.platform == 'darwin':
-        multiprocessing.set_executable(sys.executable)
-        try:
-            multiprocessing.set_start_method('fork', force=True)
-            _logger.info("Set multiprocessing start method to 'fork' for frozen macOS build")
-        except RuntimeError:
-            pass
-        os.environ['PYTHONEXECUTABLE'] = sys.executable
-
     sys.excepthook = qt.exceptionHandler
 
     app = qt.QApplication(sys.argv)
