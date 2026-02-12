@@ -151,7 +151,7 @@ jobs:
 
       - name: Install Qt
         run: |
-          python -m pip install Pyside6==6.9.1
+          python -m pip install Pyside6==6.10.2
           #PyQt5==5.14.1
 
       - name: Download all artifacts
@@ -237,7 +237,7 @@ jobs:
 
       - name: Install Qt
         run: |
-          python -m pip install Pyside6==6.9.1
+          python -m pip install Pyside6==6.10.2
           #PyQt5
 
       - name: Download all artifacts
