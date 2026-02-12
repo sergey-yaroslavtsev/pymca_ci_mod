@@ -53,8 +53,8 @@ hiddenimports += collect_submodules('PyMca5.PyMcaGui.pymca')
 my_binaries = []
 
 hiddenimports += collect_submodules('PySide6.QtTest')
-hiddenimports += collect_submodules('multiprocessing')
-hiddenimports += collect_submodules('multiprocessing.spawn')
+# hiddenimports += collect_submodules('multiprocessing')
+# hiddenimports += collect_submodules('multiprocessing.spawn')
 # hiddenimports += collect_submodules('multiprocessing.fork')
 
 if sys.platform.startswith("win"):
@@ -80,7 +80,7 @@ excludes = []
 excludes.append("debugpy")
 
 # This module basically does not work with frozen versions
-# excludes.append("multiprocessing")
+excludes.append("multiprocessing")
 
 
 # get the script list
