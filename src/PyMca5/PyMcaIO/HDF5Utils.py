@@ -31,37 +31,32 @@ def safe_hdf5_group_keys(file_path, data_path=None):
 
 
 def run_in_subprocess(target, *args, context=None, default=None, **kwargs):
-    # if getattr(sys, 'frozen', False):
-    #     _logger.debug("Frozen executable. Using standard approach")
-    #     try:
-    #         return target(*args, **kwargs)
-    #     except Exception:
-    #         return default
-    
-    # try: 
-    #     import multiprocessing
-    #     ctx = multiprocessing.get_context(context)
-    #     queue = ctx.Queue(maxsize=1)
-    #     p = ctx.Process(
-    #         target=subprocess_main,
-    #         args=(queue, target) + args,
-    #         kwargs=kwargs,
-    #     )
-    #     p.start()
-    #     try:
-    #         p.join()
-    #         try:
-    #             return queue.get(block=False)
-    #         except Empty:
-    #             return default
-    #     finally:
-    #         try:
-    #             p.kill()
-    #         except AttributeError:
-    #             p.terminate()
-    # except Exception:
-    #     _logger.warning("Multiprocessing is not available. Using standard approach")
-    #     return target(*args, **kwargs)
+    try: 
+        import multiprocessing
+        ctx = multiprocessing.get_context(context)
+        queue = ctx.Queue(maxsize=1)
+        p = ctx.Process(
+            target=subprocess_main,
+            args=(queue, target) + args,
+            kwargs=kwargs,
+        )
+        p.start()
+        try:
+            p.join()
+            try:
+                return queue.get(block=False)
+            except Empty:
+                return default
+        finally:
+            try:
+                p.kill()
+            except AttributeError:
+                p.terminate()
+    except Exception:
+        if getattr(sys, 'frozen', False):
+            _logger.debug("Frozen executable. Using standard approach")
+        else:
+            _logger.warning("Multiprocessing is not available. Using standard approach")
         try:
             return target(*args, **kwargs)
         except Exception:
